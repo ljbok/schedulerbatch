@@ -104,7 +104,7 @@ public class SchedulerService {
 
         // api 호출 시 첫 실행시키고, 1분마다 반복실행 시키는 경우
         /*
-        taskScheduler.scheduleAtFixedRate() -> {
+        taskScheduler.scheduleAtFixedRate(() -> {
              asyncTaskSchedulerLog(content);
         }, 1000 * 60);
         */
