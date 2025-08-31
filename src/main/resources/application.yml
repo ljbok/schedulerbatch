@@ -2,19 +2,32 @@ spring:
   application:
     name: schedulerbatch
 
+  # JPA가 먼저 초기화되도록 설정
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+#      ddl-auto: create  # 애플리케이션 시작 시 테이블 생성
+      ddl-auto: update  # 기존 테이블 유지
+    show-sql: true  # SQL 로그 출력
+    database-platform: org.hibernate.dialect.H2Dialect  # H2 전용 Dialect
+
   datasource:
-    url: jdbc:h2:tcp://localhost/~/test  # In-memory H2 DB
+    # 파일 기반 H2 DB  인메모리 방식 - > url: jdbc:h2:mem:testdb
+#    url: jdbc:h2:file:~/testdb   // 이거 이렇게 embede 로 로그인 하면 브라우저 h2 디비 접속이 안됨 embeded 는 단일 연결 원칙이라
+    url: jdbc:h2:tcp://localhost/~/testdb  # 이렇게 tcp(server) 로 해야 다중 연결 가능
     driver-class-name: org.h2.Driver
-    username: sa  # root
-    password:  # inital pw is not exist
+    username: sa
+    password: ""  # H2 기본 비밀번호 없음
     hikari:
-      pool-name: HikariCP  # HikariCP
-    h2:
-      console:
-        enabled: true  # H2 log use : true
-        path: /h2-console  #
-    jpa:
-      hibernate:
-        ddl-auto: create  # JPA DDL option :   create, update... etc
-      show-sql: true  # show sql query : true
-      database-platform: org.hibernate.dialect.H2Dialect  # H2 DB Hibernate Dialect : jpa dialect target is h2 db
+      pool-name: HikariCP  # 커넥션 풀 이름
+
+  h2:
+    console:
+      enabled: true  # H2 콘솔 활성화
+      path: /h2-console  # 콘솔 경로
+
+  batch:
+    job:
+      enabled: true  # 애플리케이션 시작 시 Job 자동 실행
+    jdbc:
+      initialize-schema: always  # Spring Batch 메타 테이블 자동 생성
